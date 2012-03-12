@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugins>
+    <plugin name="File" value="com.cordova.File"/>
+    <plugin name="Notification" value="com.cordova.Notification"/>
+    <plugin name="Accelerometer" value="com.cordova.Accelerometer"/>
+    <plugin name="Events" value="com.cordova.Events"/>
+    <plugin name="Geolocation" value="com.cordova.Geolocation"/>
+    <plugin name="Device" value="com.cordova.Device"/>
+    <plugin name="Console" value="com.cordova.Console"/>
+    <plugin name="Connection" value="com.cordova.Connection"/>
+    <plugin name="Compass" value="com.cordova.Compass"/>
+    <plugin name="Contacts" value="com.cordova.Contacts"/>
+
+<!--    <plugin name="Compass" value="com.cordova.CompassListener"/>
+    <plugin name="Media" value="com.cordova.AudioHandler"/>
+    <plugin name="Contacts" value="com.cordova.ContactManager"/>
+    <plugin name="Crypto" value="com.cordova.CryptoHandler"/>
+    <plugin name="Network Status" value="com.cordova.NetworkManager"/>
+    <plugin name="Storage" value="com.cordova.Storage"/>
+    <plugin name="Temperature" value="com.cordova.TempListener"/>
+    <plugin name="FileTransfer" value="com.cordova.FileTransfer"/>
+    <plugin name="Capture" value="com.cordova.Capture"/>
+    <plugin name="Battery" value="com.cordova.BatteryListener"/>-->
+</plugins>

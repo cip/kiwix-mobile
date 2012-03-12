@@ -19,3 +19,7 @@ lint.xml
 *.perspectivev3
 xcuserdata
 
+# Qt ignores
+*.pro.user
+*~
+WikipediaMobile-build-*
