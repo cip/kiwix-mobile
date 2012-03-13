@@ -1,23 +1,107 @@
 function getAboutVersionString() {
-    return "1.1beta2";
+    return "1.1alpha1";
 }
 
-function setMenuItemState(action, state, noUpdate) {
-    if(state) {
-        $("command[action='" + action + "']").removeAttr("disabled");
-    } else {
-        $("command[action='" + action + "']").attr("disabled", "disabled");
-    }
-    if(!noUpdate) {
-        updateMenuState();
-    }
+function setMenuItemState(action, state) {
+    // Stupid iterator
+    $.each(menu_items, function(i, item) {
+        if(item.id == action) {
+            item.disabled = !state;
+        }
+    });
+    updateMenuState();
 }
 
 function setPageActionsState(state) {
-    setMenuItemState("read-in", state, true);
-    setMenuItemState("save-page", state, true);
-    setMenuItemState("share-page", state, true);
+    setMenuItemState("page-actions", state);
 }
+
+var menu_items = [
+    {
+        id: 'go-back',
+        action: chrome.goBack,
+        disabled: true
+    },
+    {
+        id: 'go-forward',
+        action: chrome.goForward,
+        disabled: true
+    },
+    {
+        id: 'read-in',
+        action:  languageLinks.showAvailableLanguages
+    },
+    {
+        id: 'page-actions',
+        action: function() {
+            popupMenu([
+                mw.msg('menu-savePage'),
+                mw.msg('menu-sharePage'),
+                mw.msg('menu-cancel')
+            ], function(value, index) {
+                if (index == 0) {
+                    savedPages.saveCurrentPage();
+                } else if (index == 1) {
+                    sharePage();
+                }
+            }, {
+                cancelButtonIndex: 2,
+                origin: this
+            });
+        }
+    },
+    {
+        id: 'list-actions',
+        action: function() {
+            popupMenu([
+                mw.msg('menu-nearby'),
+                mw.msg('menu-savedPages'),
+                mw.msg('menu-history'),
+                mw.msg('menu-cancel')
+            ], function(val, index) {
+                if (index == 0) {
+                    geo.showNearbyArticles();
+                } else if (index == 1) {
+                    savedPages.showSavedPages();
+                } else if (index == 2) {
+                    appHistory.showHistory();
+                }
+            }, {
+                cancelButtonIndex: 3,
+                origin: this
+            });
+        }
+    },
+    {
+        id: 'view-settings',
+        action: appSettings.showSettings
+    }
+];
+
+function updateMenuState() {
+    $('#menu').remove();
+    var $menu = $('<div>');
+    $menu
+        .attr('id', 'menu')
+        .appendTo('body');
+
+    $.each(menu_items, function(i, item) {
+        var $button = $('<button>');
+        $button
+            .attr('id', item.id)
+            .attr('title', mw.msg(item.id));
+        if(item.disabled) {
+            $button.addClass("disabled");
+        } else {
+            $button.click(function() {
+                item.action.apply(this);
+            });
+        }
+        $button.append('<span>')
+            .appendTo($menu);
+    });
+};
+
 
 window.CREDITS = [
     "<a href='http://phonegap.com'>PhoneGap</a>, Apache License 2.0",
@@ -50,9 +134,6 @@ chrome.showNotification = function(text) {
             console.log("platform.js: chrome.showNotification()")
 }
 
-function updateMenuState() {
-    console.log("platform.js: updateMenuState()")
-};
 
 network.isConnected = function()  {
     return navigator.network.connection.type == Connection.NONE ? false : true;
@@ -68,3 +149,6 @@ app.setCaching = function(enabled, success) {
     }
 }
 
+chrome.addPlatformInitializer(function() {
+//    $('html').removeClass('goodscroll').addClass('badscroll');
+})
