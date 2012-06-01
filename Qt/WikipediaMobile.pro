@@ -24,6 +24,10 @@ SOURCES += main.cpp \
     src/cordova.cpp \
     src/cplugin.cpp \
     src/plugins/contacts.cpp
+SOURCES +=     src/zimfilewrapper.cpp \
+    src/zimreply.cpp \
+    src/asynchronouszimreader.cpp
+
 HEADERS += \
     src/plugins/notification.h \
     src/plugins/geolocation.h \
@@ -38,6 +42,32 @@ HEADERS += \
     src/cordova.h \
     src/cplugin.h \
     src/plugins/contacts.h
+HEADERS +=  src/zimfilewrapper.h \
+    src/zimreply.h \
+    src/asynchronouszimreader.h
+
+INCLUDEPATH += ../../../zimlib/include ../../../xz
+symbian: {
+    # TODO find out why this is not working on my linux. (actually it should)
+    LIBS += -lzimlib
+    LIBS += -lliblzma
+#LIBS += -L../zimlib
+
+#    LIBS += -l:libzimlib.a
+ #   LIBS += -L../xz
+  #  LIBS += -l:libliblzma.lib.a
+} else:simulator {
+   #Libs need to be copied to ../simulatorlibs manually
+    LIBS *= -L../../../simulatorlibs -lzimlib
+    LIBS *= -L../../../simulatorlibs -lliblzma
+}
+else {
+    LIBS *= -L../../zimlib -lzimlib
+    LIBS *= -L../../xz -lliblzma
+}
+
+QT += network \
+    core
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     message("Qt5 build")

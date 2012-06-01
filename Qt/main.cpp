@@ -34,6 +34,46 @@
 # include <MDeclarativeCache>
 #endif
 
+
+#include <QNetworkAccessManager>
+#include <QDeclarativeNetworkAccessManagerFactory>
+#include "src/zimreply.h"
+
+
+class ZimNetworkAccessManager : public QNetworkAccessManager
+{
+public:
+    ZimNetworkAccessManager(QObject* parent = 0) : QNetworkAccessManager(parent)
+    {
+    }
+
+    virtual QNetworkReply *createRequest(Operation op, const QNetworkRequest &request, QIODevice *outgoingData)
+    {
+        qDebug() << "In ZimNetworkAccessManager::createRequest. Operation : " << op << " request.url():" << request.url();
+
+        //if (op != GetOperation || request.url().scheme() != QLatin1String("qt-render") || request.url().host() != QLatin1String("button"))
+        //TODO external links?
+        if (op != GetOperation )
+            return QNetworkAccessManager::createRequest(op, request, outgoingData);
+        return new ZimReply(this, request);
+    }
+};
+
+
+
+class MyNetworkAccessManagerFactory : public QDeclarativeNetworkAccessManagerFactory
+ {
+ public:
+     virtual QNetworkAccessManager *create(QObject *parent);
+ };
+
+QNetworkAccessManager *MyNetworkAccessManagerFactory::create(QObject *parent)
+ {
+     QNetworkAccessManager *nam = new ZimNetworkAccessManager(parent);
+     return nam;
+ }
+
+
 #ifdef MEEGO_EDITION_HARMATTAN
 Q_DECL_EXPORT int main(int argc, char *argv[])
 #else
