@@ -38,6 +38,7 @@ window.app = function() {
 				url: url,
 				dataType: 'text',
 				success: function(data) {
+                        console.log("loadPage. Received data for url (" +origUrl+ ") : "+data)
 						chrome.renderHtml(data, origUrl);
 						chrome.onPageLoaded();
 						d.resolve();
@@ -79,13 +80,13 @@ window.app = function() {
 	}
 
 	function urlForTitle(title) {
-//		return app.baseURL + "/wiki/" + encodeURIComponent(title.replace(/ /g, '_'));
-	    return app.baseURL + title;
+      //  return app.baseURL + "/wiki/" + encodeURIComponent(title.replace(/ /g, '_'));
+        return app.baseURL + title;
 	}
 
 	function baseUrlForLanguage(lang) {
-//		return 'https://' + lang + '.m.' + PROJECTNAME + '.org';
-	    return 'zim://';
+    //    return 'https://' + lang + '.m.' + PROJECTNAME + '.org';
+        return 'zim://';
 	}
 
 	function setContentLanguage(language) {
