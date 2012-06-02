@@ -79,11 +79,13 @@ window.app = function() {
 	}
 
 	function urlForTitle(title) {
-		return app.baseURL + "/wiki/" + encodeURIComponent(title.replace(/ /g, '_'));
+//		return app.baseURL + "/wiki/" + encodeURIComponent(title.replace(/ /g, '_'));
+	    return app.baseURL + title;
 	}
 
 	function baseUrlForLanguage(lang) {
-		return 'https://' + lang + '.m.' + PROJECTNAME + '.org';
+//		return 'https://' + lang + '.m.' + PROJECTNAME + '.org';
+	    return 'zim://';
 	}
 
 	function setContentLanguage(language) {
