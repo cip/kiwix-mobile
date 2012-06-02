@@ -96,6 +96,8 @@ int main(int argc, char *argv[])
     Cordova::instance()->setTopLevelEventsReceiver(view.data());
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->rootContext()->setContextProperty("cordova", Cordova::instance());
+    view->engine()->setNetworkAccessManagerFactory(new MyNetworkAccessManagerFactory);
+
 # ifdef MEEGO_EDITION_HARMATTAN
     view->setSource(QUrl(QString("%1/qml/main_harmattan.qml").arg(Cordova::instance()->workingDir())));
     view->showFullScreen();
