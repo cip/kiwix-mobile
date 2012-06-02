@@ -389,7 +389,9 @@ zim::File::const_iterator ZimFileWrapper::getArticleByUrl(QString articleUrl,QCh
     QString strippedArticleUrl;
 
     if (articleUrl == "" || articleUrl == "/")
+        //FIXME
         articleUrl = QLatin1String("/A/HTML5 Demo: Video.html");
+        //articleUrl = QLatin1String("/A/Wikipedia.html");
 
     qDebug() << "Loading article from url: " << articleUrl ;
 
@@ -401,12 +403,11 @@ zim::File::const_iterator ZimFileWrapper::getArticleByUrl(QString articleUrl,QCh
         strippedArticleUrl=articleUrl.remove(0, 3); //Remove /A/
         qDebug() << Q_FUNC_INFO << ": articleUrl \""<<articleUrl<<"\" starts with /"<< nameSpace << "/./"<< nameSpace << "/ refers to article name space.";
 
-    } else if (articleUrl.startsWith(QLatin1String("/")+QLatin1Char('I')+QLatin1String("/"))) {
-        //FIXME: this is hack for webkit to "autodetect" namespace. May not work in all cases.
-        //      Clean up logic in case webkit finally used.
-        nameSpace = QLatin1Char('I');
+    } else if (articleUrl.startsWith(QLatin1String("/")) && (articleUrl.at(2)==QLatin1Char('/'))) {
+        //TODO: clean up (e.g. always use namespace in url)
+        nameSpace =  articleUrl.at(1);
         strippedArticleUrl= strippedArticleUrl=articleUrl.remove(0, 3); //Remove /I/
-        qDebug() << Q_FUNC_INFO << ": articleUrl \""<<articleUrl<<"\". FIXME: this is hack for webkit (needs auto extract of namespace). Fix this in case webkit approach used. ";
+        qDebug() << Q_FUNC_INFO << ": articleUrl \""<<articleUrl<<". Namespace in url: "+nameSpace.toLatin1();
     } else if (articleUrl.startsWith(nameSpace+QLatin1String("/"))) {
         //TODO remove this when correct behavior clarified.
         strippedArticleUrl=articleUrl.remove(0, 2); //Remove /A
