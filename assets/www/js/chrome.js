@@ -90,8 +90,8 @@ window.chrome = function() {
 
 
 		languageLinks.parseAvailableLanguages($div);
-
-		chrome.doScrollHack('#content');
+        chrome.doScrollHack('#content');
+        console.log("renderHtml after doScrollHack");
 	}
 
 	function showNotification(text) {
@@ -341,15 +341,17 @@ window.chrome = function() {
 	}
 	
 	function onPageLoaded() {
+        console.log("in onPageLoaded");
 		// TODO: next two lines temporary to deal with legacy mediawiki instances
 		$('.section_heading').removeAttr('onclick');
 		$('.section_heading button').remove();
 		// setup default MobileFrontend behaviour (including toggle)
-		MobileFrontend.init();
+        //FIXME currently removed,  because not working
+        //MobileFrontend.init();
 		window.scroll(0,0);
 		appHistory.addCurrentPage();
 		toggleMoveActions();
-		geo.addShowNearbyLinks();
+        geo.addShowNearbyLinks();
 		chrome.hideSpinner();
 		console.log('currentHistoryIndex '+currentHistoryIndex + ' history length '+pageHistory.length);
 	}
