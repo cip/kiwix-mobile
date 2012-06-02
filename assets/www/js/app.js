@@ -29,6 +29,14 @@ window.app = function() {
 	}
 
 	function loadPage(url, origUrl) {
+
+        if (!(url.substr(0, 4) == "file")) {
+            console.log("loadPage('" + url + "')----------------------------------------------");
+            var iframe = document.getElementById("main");
+            iframe.src = url;
+            return;
+        }
+
 		var d = $.Deferred();
 		origUrl = origUrl || url;
 		console.log('hideAndLoad url ' + url);
