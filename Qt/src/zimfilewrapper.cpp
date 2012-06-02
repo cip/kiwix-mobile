@@ -217,6 +217,7 @@ QByteArray ZimFileWrapper::getDataByUrl(QString articleUrl)
 // this for decoded URL (as in zim file index)
 QString ZimFileWrapper::getArticleTextByUrl(QString articleUrl)
 {
+
     QMutexLocker locker(&mutex);
     QString articleText = QLatin1String("ERROR");
     zim::Blob blob;
@@ -386,6 +387,12 @@ QString ZimFileWrapper::getArticleTextByTitle(QString articleTitle)
 // nameSpace should either be 'A' for Articles or 'I' for images.
 zim::File::const_iterator ZimFileWrapper::getArticleByUrl(QString articleUrl,QChar nameSpace, bool closestMatchIfNotFound) {
     QString strippedArticleUrl;
+
+    if (articleUrl == "" || articleUrl == "/")
+        articleUrl = QLatin1String("/A/HTML5 Demo: Video.html");
+
+    qDebug() << "Loading article from url: " << articleUrl ;
+
     //Supported article urls are:
     // A/Url  (Expected by zimlib find(Url) )
     // /A/Url  (Appearanlty used by
@@ -452,6 +459,7 @@ zim::File::const_iterator ZimFileWrapper::getArticleByUrl(QString articleUrl,QCh
             qWarning() << "Neither exists. closestMatchIfNotFound=true => Return closest match. (With + not replaced by spaces)";
         }
     }
+
     return r.second;
 }
 

@@ -5,8 +5,8 @@ import "cordova_wrapper.js" as CordovaWrapper
 Flickable {
     id: webFlickable
 
-    width: 854
-    height: 480
+    width: 418
+    height: 800
 
     contentHeight: webView.height
     contentWidth: webView.width
