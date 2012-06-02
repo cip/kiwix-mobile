@@ -54,10 +54,13 @@ public:
         //if (op != GetOperation || request.url().scheme() != QLatin1String("qt-render") || request.url().host() != QLatin1String("button"))
         //TODO external links?
         qDebug() << "Loading url: " << request.url();
-        if (request.url().scheme() == QLatin1String("zim"))
+        if ((request.url().scheme() == QLatin1String("zim")) && (op == QNetworkAccessManager::GetOperation)) {
+            qDebug() << "request targets zim file -> read from zimfile.";
             return new ZimReply(this, request);
-        else
+        } else {
+            qDebug() << "request not to zim file -> createRequest";
             return QNetworkAccessManager::createRequest(op, request, outgoingData);
+        }
     }
 };
 
@@ -102,7 +105,8 @@ int main(int argc, char *argv[])
     view->engine()->setNetworkAccessManagerFactory(new MyNetworkAccessManagerFactory);
     ZimFileWrapper zimFileWrapper;
 
-    zimFileWrapper.openZimFile("../zim/HTML5VideoDemo.zim");
+    //zimFileWrapper.openZimFile("../zim/HTML5VideoDemo.zim");
+    zimFileWrapper.openZimFile("C:\\Users\\Christian\\Downloads\\wikipedia_en_wp1_0.8_45000+_12_2010.zim");
 
 # ifdef MEEGO_EDITION_HARMATTAN
     view->setSource(QUrl(QString("%1/qml/main_harmattan.qml").arg(Cordova::instance()->workingDir())));
