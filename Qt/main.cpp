@@ -96,6 +96,11 @@ int main(int argc, char *argv[])
     Cordova::instance()->setTopLevelEventsReceiver(view.data());
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->rootContext()->setContextProperty("cordova", Cordova::instance());
+    //FIXME:
+    view->engine()->setNetworkAccessManagerFactory(new MyNetworkAccessManagerFactory);
+    ZimFileWrapper zimFileWrapper;
+    zimFileWrapper.openZimFile("../../zim/HTML5VideoDemo.zim");
+
 # ifdef MEEGO_EDITION_HARMATTAN
     view->setSource(QUrl(QString("%1/qml/main_harmattan.qml").arg(Cordova::instance()->workingDir())));
     view->showFullScreen();
