@@ -29,6 +29,7 @@ window.app = function() {
 	}
 
 	function loadPage(url, origUrl) {
+        console.log("loadPage "+url)
 		var d = $.Deferred();
 		origUrl = origUrl || url;
 		console.log('hideAndLoad url ' + url);
@@ -38,9 +39,14 @@ window.app = function() {
 				url: url,
 				dataType: 'text',
 				success: function(data) {
-                        console.log("loadPage. Received data for url (" +origUrl+ ") : "+data)
-						chrome.renderHtml(data, origUrl);
+                        console.log("loadPage. Received data for url (" +origUrl+ ")");
+                        chrome.renderHtml(data, origUrl);
+                        console.log("renderHtml successful");
 						chrome.onPageLoaded();
+                        // TODO why is without this click ignored? (expectation would rather be
+                        // that link is incorrect
+                        // TODO handle external links
+                        $("a").click(function () {app.loadPage("zim://"+$(this).attr("href"))})
 						d.resolve();
 					},
 				error: function(xhr) {
@@ -86,6 +92,7 @@ window.app = function() {
 
 	function baseUrlForLanguage(lang) {
     //    return 'https://' + lang + '.m.' + PROJECTNAME + '.org';
+                console.log("baseurlforlanguage "+lang)
         return 'zim://';
 	}
 
