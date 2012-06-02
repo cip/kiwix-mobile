@@ -28,7 +28,7 @@ window.chrome = function() {
 	 * @param string html
 	 * @param string url - base URL
 	 */
-	function renderHtml(html, url) {
+	function renderHtml(html, url) {              
 		$('base').attr('href', url);
 
 		// Horrible hack to grab the lang & dir attributes from
@@ -37,21 +37,48 @@ window.chrome = function() {
 			$stubdiv = $('<div ' + stub + '></div>'),
 			lang = $stubdiv.attr('lang'),
 			dir = $stubdiv.attr('dir');
-
+                //Fixme
+                dir ="ltr";
 		var trimmed = html.replace(/<body[^>]+>(.*)<\/body/i, '$1');
-
-		var selectors = ['#content>*', '#copyright'],
+                console.log("renderHtml: trimmed: "+trimmed)
+        //var selectors = ['#content>*', '#copyright'],
+                var selectors = ['#content>*', '#copyright', '#wrapper'],
 			$target = $('#main'),
 			$div = $(trimmed);
 
-		$target
+                console.log("selectors:"+selectors);
+                console.log("$target:"+$target);
+        $target
 			.empty()
 			.attr('lang', lang)
 			.attr('dir', dir);
-		$.each(selectors, function(i, sel) {
+                console.log("$target.attr('lang'):"+$target.attr('lang'));
+        /*$.each(selectors, function(i, sel) {
+                   console.log("each: sel: "+sel)
 			var con = $div.find(sel).remove();
 			con.appendTo($target);
-		});
+        });*/
+        //For kiwx just insert all instead of content div.
+                //TODO: change to only insert body child, and
+                // manually add css to include.
+        //FIXME: retrieve css url from loaded html
+                //TODO: change to jquery.
+
+        var cssId = 'myCss';  // you could encode the css path itself to generate id..
+
+        if (!document.getElementById(cssId))
+        {
+                    var head  = document.getElementsByTagName('head')[0];
+                    var link  = document.createElement('link');
+                    link.id   = cssId;
+                    link.rel  = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = '/-/html5demos.css';
+                    link.media = 'all';
+                    head.appendChild(link);
+        }
+        $div.appendTo($target);
+
 
 		languageLinks.parseAvailableLanguages($div);
 
