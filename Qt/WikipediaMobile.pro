@@ -60,8 +60,12 @@ symbian: {
    #Libs need to be copied to ../simulatorlibs manually
     LIBS *= -L../../../simulatorlibs -lzimlib
     LIBS *= -L../../../simulatorlibs -lliblzma
-}
-else {
+} else:linux-g++ {
+    LIBS += -L/usr/lib
+    LIBS += -L/usr/local/lib
+    LIBS += -L/usr/lib/i386-linux-gnu/
+    LIBS += -lzim -llzma
+} else {
     LIBS *= -L../../zimlib -lzimlib
     LIBS *= -L../../xz -lliblzma
 }
