@@ -53,9 +53,11 @@ public:
 
         //if (op != GetOperation || request.url().scheme() != QLatin1String("qt-render") || request.url().host() != QLatin1String("button"))
         //TODO external links?
-        if (op != GetOperation )
+        qDebug() << "Loading url: " << request.url();
+        if (request.url().scheme() == QLatin1String("zim"))
+            return new ZimReply(this, request);
+        else
             return QNetworkAccessManager::createRequest(op, request, outgoingData);
-        return new ZimReply(this, request);
     }
 };
 
@@ -99,7 +101,8 @@ int main(int argc, char *argv[])
     //FIXME:
     view->engine()->setNetworkAccessManagerFactory(new MyNetworkAccessManagerFactory);
     ZimFileWrapper zimFileWrapper;
-    zimFileWrapper.openZimFile("../../zim/HTML5VideoDemo.zim");
+
+    zimFileWrapper.openZimFile("../zim/HTML5VideoDemo.zim");
 
 # ifdef MEEGO_EDITION_HARMATTAN
     view->setSource(QUrl(QString("%1/qml/main_harmattan.qml").arg(Cordova::instance()->workingDir())));
