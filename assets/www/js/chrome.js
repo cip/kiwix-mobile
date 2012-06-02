@@ -41,31 +41,31 @@ window.chrome = function() {
                 dir ="ltr";
 		var trimmed = html.replace(/<body[^>]+>(.*)<\/body/i, '$1');
                 console.log("renderHtml: trimmed: "+trimmed)
-        //var selectors = ['#content>*', '#copyright'],
-                var selectors = ['#content>*', '#copyright', '#wrapper'],
+                var selectors = ['#content>*', '#copyright'],
 			$target = $('#main'),
 			$div = $(trimmed);
 
-                console.log("selectors:"+selectors);
+        console.log("selectors:"+selectors);
                 console.log("$target:"+$target);
         $target
 			.empty()
 			.attr('lang', lang)
 			.attr('dir', dir);
                 console.log("$target.attr('lang'):"+$target.attr('lang'));
-        /*$.each(selectors, function(i, sel) {
-                   console.log("each: sel: "+sel)
-			var con = $div.find(sel).remove();
-			con.appendTo($target);
-        });*/
-        //For kiwx just insert all instead of content div.
-                //TODO: change to only insert body child, and
-                // manually add css to include.
-        //FIXME: retrieve css url from loaded html
-                //TODO: change to jquery.
 
-        var cssId = 'myCss';  // you could encode the css path itself to generate id..
 
+        //retrieve css url from loaded html
+        //TODO: not working. (no links found)
+        //TODO: remove before loading next page. (e.g. by assigning id)
+        d = $("<div/>").append($div)
+                console.log("links in head:" + $("link",d[0].html));
+                console.log("nr. found links: "+$("link",d).length);
+        $("link",d).each(function(index, value) {
+                                             console.log('link in loaded file' + index + ':' + $(this).attr('rel'));
+                                            $("head").append($(this));
+                                           });
+
+/*      var cssId = 'myCss';  // you could encode the css path itself to generate id..
         if (!document.getElementById(cssId))
         {
                     var head  = document.getElementsByTagName('head')[0];
@@ -76,7 +76,16 @@ window.chrome = function() {
                     link.href = '/-/html5demos.css';
                     link.media = 'all';
                     head.appendChild(link);
-        }
+        }*/
+
+        /*$.each(selectors, function(i, sel) {
+                console.log("each: sel: "+sel)
+          var con = $div.find(sel).remove();
+          con.appendTo($target);
+        });*/
+        //For kiwx just insert all instead of content div.
+        //TODO: change to only insert body child, and
+        // manually add css to include.
         $div.appendTo($target);
 
 
@@ -163,7 +172,9 @@ window.chrome = function() {
 				if(history.length==0 || window.history.length > 1) {
 					app.navigateToPage(app.baseURL);
 				} else {
-					app.navigateToPage(history[history.length-1].value);
+                    //FIXME. this is hack for kiwix debugging
+                    app.navigateToPage(app.baseURL);
+                    //app.navigateToPage(history[history.length-1].value);
 				}
 			});
 		});
