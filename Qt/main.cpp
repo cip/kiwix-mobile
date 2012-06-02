@@ -108,10 +108,12 @@ int main(int argc, char *argv[])
     view->setSource(QUrl(QString("%1/qml/main_harmattan.qml").arg(Cordova::instance()->workingDir())));
     view->showFullScreen();
 # else
-    view->setSource(QUrl(QString("%1/qml/main.qml").arg(Cordova::instance()->workingDir())));
+
 #  if defined(Q_OS_SYMBIAN) || defined(QT_SIMULATOR)
+    view->setSource(QUrl("qml/main.qml"));
     view->showFullScreen();
 #  else
+    view->setSource(QUrl(QString("%1/qml/main.qml").arg(Cordova::instance()->workingDir())));
     view->show();
 #  endif
 # endif

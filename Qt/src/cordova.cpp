@@ -30,6 +30,10 @@ Cordova::Cordova(QObject *parent) : QObject(parent) {
     m_topLevelEventsReceiver = 0;
     // Determine index file path
     m_workingDir = QApplication::applicationDirPath();
+#if defined(Q_OS_SYMBIAN) || defined(QT_SIMULATOR)
+    m_workingDir.cdUp();
+#endif
+
 #ifdef MEEGO_EDITION_HARMATTAN
     m_workingDir.cdUp();
 #endif
