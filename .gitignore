@@ -22,4 +22,31 @@ xcuserdata
 # Qt ignores
 *.pro.user
 *~
+obj
+moc
+ui
 WikipediaMobile-build-*
+Makefile*
+
+
+# Symbian build system generated files 	
+# ---------------------
+
+ABLD.BAT
+bld.inf
+*.mmp
+*.mk
+*.rss
+*.loc
+!s60main.rss
+*.pkg
+plugin_commonU.def
+*.qtplugin
+*.sis
+*.sisx
+*.lst
+*.exe
+*.mif
+*.rsc
+*.sym
+*.lib
