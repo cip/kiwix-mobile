@@ -19,14 +19,17 @@
 
 #include "../cplugin.h"
 
-#include <QGeoPositionInfoSource>
-#include <QGeoPositionInfo>
+//#include <QGeoPositionInfoSource>
+//#include <QGeoPositionInfo>
 #include <QList>
 #include <QVariantMap>
 
 #ifdef QTM_NAMESPACE
 QTM_USE_NAMESPACE
 #endif
+//FIXME: hack to compile without geolocation
+class QGeoPositionInfo {};
+class QGeoPositionInfoSource {};
 
 class Geolocation : public CPlugin
 {

@@ -104,6 +104,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 
     QT += declarative
     CONFIG += mobility qdeclarative-boostable
+
     MOBILITY += feedback location systeminfo sensors contacts
 } else {
     message("Qt4 build")
@@ -119,7 +120,12 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     QT += declarative
 
     CONFIG += mobility
-    MOBILITY += feedback location systeminfo sensors contacts
+    #MOBILITY += feedback location systeminfo sensors contacts
+    #Removed temp location, as else not working on android.
+    # error: W/dalvikvm(31667): JNI WARNING: expected return type 'I'
+    #        W/dalvikvm(31667):              calling Lorg/kde/necessitas/mobile/QtLocation;.supportedPositiongMethods ()J
+
+    MOBILITY += feedback systeminfo sensors contacts
 }
 
 QT += webkit
@@ -170,4 +176,5 @@ OTHER_FILES += \
     android/src/org/kde/necessitas/origo/QtApplication.java \
     android/version.xml
 
-
+message(QT: $$QT)
+message(MOBILITY: $$MOBILITY)

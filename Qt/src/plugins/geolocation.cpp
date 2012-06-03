@@ -17,9 +17,9 @@
 #include "geolocation.h"
 
 #include "../pluginregistry.h"
-
-#include <QGeoPositionInfo>
-#include <QGeoCoordinate>
+#include <QDebug>
+//#include <QGeoPositionInfo>
+//#include <QGeoCoordinate>
 
 Geolocation* Geolocation::m_geolocation = new Geolocation();
 
@@ -31,16 +31,18 @@ Geolocation::Geolocation() : CPlugin() {
 }
 
 void Geolocation::init() {
-    m_geoPositionInfoSource = QGeoPositionInfoSource::createDefaultSource( this );
+    /*m_geoPositionInfoSource = QGeoPositionInfoSource::createDefaultSource( this );
     if( m_geoPositionInfoSource != 0 ) {
         QObject::connect( m_geoPositionInfoSource, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SLOT(positionUpdated(QGeoPositionInfo)) );
         QObject::connect( m_geoPositionInfoSource, SIGNAL(updateTimeout()), this, SLOT(updateTimeout()) );
-    }
+    }*/
+    qDebug() << "geolocation not supported";
 }
 
 void Geolocation::getCurrentPosition( int scId, int ecId, QVariantMap p_options ) {
     Q_UNUSED(p_options)
-
+    qDebug() << "geolocation not supported";
+/*
     m_successCallbacks << scId;
     m_errorCallbacks << ecId;
 
@@ -51,11 +53,12 @@ void Geolocation::getCurrentPosition( int scId, int ecId, QVariantMap p_options 
     else {
         // TODO: Replace with correct error code
         this->updateTimeout();
-    }
+    }*/
 }
 
 void Geolocation::positionUpdated( const QGeoPositionInfo &update ) {
-    QGeoCoordinate coordinate = update.coordinate();
+    qDebug() << "geolocation not supported";
+    /* QGeoCoordinate coordinate = update.coordinate();
     QString callbackArguments = "Position.cast( Coordinates.cast( " + QString::number(coordinate.latitude()) +
             ", " + QString::number(coordinate.longitude()) +
             ", " + QString::number(coordinate.altitude()) +
@@ -70,14 +73,16 @@ void Geolocation::positionUpdated( const QGeoPositionInfo &update ) {
     }
 
     m_errorCallbacks.clear();
-    m_successCallbacks.clear();
+    m_successCallbacks.clear();*/
 }
 
 void Geolocation::updateTimeout() {
-    for( int i = 0; i < m_errorCallbacks.size(); i++ ) {
+    qDebug() << "geolocation not supported";
+    /* for( int i = 0; i < m_errorCallbacks.size(); i++ ) {
         this->callback( m_errorCallbacks.at( i ), "PositionError.cast( PositionError.TIMEOUT, 'Position request timed out.' )" );
     }
 
     m_errorCallbacks.clear();
     m_successCallbacks.clear();
+    */
 }
