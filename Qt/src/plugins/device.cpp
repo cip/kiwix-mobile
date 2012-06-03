@@ -70,6 +70,9 @@ void Device::getInfo( int scId, int ecId ) {
 #ifdef Q_OS_LINUX
     QString platform = "Linux";
 #endif
+#ifdef Q_OS_ANDROID
+    QString platform = "Android";
+#endif
 
 #if QT_VERSION < 0x050000
     this->callback( scId, "'" + systemDeviceInfo->model() + "', '" + CORDOVA + "', '" + platform + "', '" + systemDeviceInfo->uniqueDeviceID() + "', '" + systemInfo->version( QSystemInfo::Os ) + "'" );
