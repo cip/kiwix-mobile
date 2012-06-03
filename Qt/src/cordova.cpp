@@ -67,6 +67,7 @@ void Cordova::loadFinished( bool ok ) {
 
     // Try to open the plugins configuration
     QFile pluginsXml( xmlDir.filePath("plugins.xml") );
+    qDebug() << "plugins.xml path:"<< pluginsXml.fileName() << ". xmlDir: "+xmlDir.absolutePath();
     if( !pluginsXml.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
         qDebug() << "Error loading plugins config!";
         return;

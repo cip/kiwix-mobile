@@ -391,7 +391,8 @@ zim::File::const_iterator ZimFileWrapper::getArticleByUrl(QString articleUrl,QCh
     if (articleUrl == "" || articleUrl == "/")
         //FIXME
         //articleUrl = QLatin1String("/A/HTML5 Demo: Video.html");
-        articleUrl = QLatin1String("/A/Wikipedia.html");
+        //articleUrl = QLatin1String("/A/Wikipedia.html");
+        articleUrl = QLatin1String("/A/Bryan Adams");
 
     qDebug() << "Loading article from url: " << articleUrl ;
 

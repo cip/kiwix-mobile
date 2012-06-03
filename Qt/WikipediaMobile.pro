@@ -72,6 +72,9 @@ symbian: {
     message("android")
     LIBS += -L../libs/android -lzimlib
     LIBS += -L../libs/android -lliblzma
+
+    RESOURCES += \
+        qml.qrc
 } else {
     message("Other target")
     LIBS *= -L../../zimlib -lzimlib
@@ -178,3 +181,4 @@ OTHER_FILES += \
 
 message(QT: $$QT)
 message(MOBILITY: $$MOBILITY)
+

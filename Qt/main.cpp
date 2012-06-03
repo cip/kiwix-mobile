@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
     ZimFileWrapper zimFileWrapper;
 
     //zimFileWrapper.openZimFile("../zim/HTML5VideoDemo.zim");
-    zimFileWrapper.openZimFile("C:\\Users\\Christian\\Downloads\\wikipedia_en_wp1_0.8_45000+_12_2010.zim");
-
+    //zimFileWrapper.openZimFile("C:\\Users\\Christian\\Downloads\\wikipedia_en_wp1_0.8_45000+_12_2010.zim");
+    zimFileWrapper.openZimFile("Bryan Adams.zim");
 # ifdef MEEGO_EDITION_HARMATTAN
     view->setSource(QUrl(QString("%1/qml/main_harmattan.qml").arg(Cordova::instance()->workingDir())));
     view->showFullScreen();
@@ -116,6 +116,9 @@ int main(int argc, char *argv[])
 #  if defined(Q_OS_SYMBIAN) || defined(QT_SIMULATOR)
     view->setSource(QUrl("qml/main.qml"));
     view->showFullScreen();
+#  elif defined(Q_OS_ANDROID)
+    //package qml into resources on android, as else not deployed to device.
+    view->setSource(QUrl("qrc:/qml/main.qml"));
 #  else
     view->setSource(QUrl(QString("%1/qml/main.qml").arg(Cordova::instance()->workingDir())));
     view->show();
