@@ -48,6 +48,7 @@ HEADERS +=  src/zimfilewrapper.h \
 
 INCLUDEPATH += ../../../zimlib/include ../../../xz
 symbian: {
+    message("symbian")
     # TODO find out why this is not working on my linux. (actually it should)
     LIBS += -lzimlib
     LIBS += -lliblzma
@@ -57,15 +58,22 @@ symbian: {
  #   LIBS += -L../xz
   #  LIBS += -l:libliblzma.lib.a
 } else:simulator {
+    message("simulator")
    #Libs need to be copied to ../simulatorlibs manually
     LIBS *= -L../../../simulatorlibs -lzimlib
     LIBS *= -L../../../simulatorlibs -lliblzma
 } else:linux-g++ {
+    message("linux-g++")
     LIBS += -L/usr/lib
     LIBS += -L/usr/local/lib
     LIBS += -L/usr/lib/i386-linux-gnu/
     LIBS += -lzim -llzma
+} else:android {
+    message("android")
+    LIBS += -L../libs/android -lzimlib
+    LIBS += -L../libs/android -lliblzma
 } else {
+    message("Other target")
     LIBS *= -L../../zimlib -lzimlib
     LIBS *= -L../../xz -lliblzma
 }
