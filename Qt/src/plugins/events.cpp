@@ -46,7 +46,8 @@ bool Events::eventFilter(QObject *obj, QEvent *ev)
 {
     if (obj == Cordova::instance()->topLevelEventsReceiver()) {
         if (ev->type() == QEvent::KeyRelease) {
-            QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(ev);
+            ///TODO check whether ev really always QKeyEvent
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(ev);
             if (!keyEvent)
                 return false;
             switch (keyEvent->key()) {
@@ -69,7 +70,8 @@ bool Events::eventFilter(QObject *obj, QEvent *ev)
                 break;
             }
         } else if (ev->type() == QEvent::KeyPress) {
-            QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(ev);
+            ///TODO check whether ev really always QKeyEvent
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(ev);
             if (!keyEvent)
                 return false;
             switch (keyEvent->key()) {
