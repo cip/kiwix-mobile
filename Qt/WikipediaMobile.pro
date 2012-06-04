@@ -134,7 +134,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 QT += webkit
 
 # Please do not modify the following two lines. Required for deployment.
-include(deployment.pri)
+include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
 OTHER_FILES += \
