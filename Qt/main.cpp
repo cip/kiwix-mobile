@@ -119,6 +119,7 @@ int main(int argc, char *argv[])
 #  elif defined(Q_OS_ANDROID)
     //package qml into resources on android, as else not deployed to device.
     view->setSource(QUrl("qrc:/qml/main.qml"));
+    view->showFullScreen();
 #  else
     view->setSource(QUrl(QString("%1/qml/main.qml").arg(Cordova::instance()->workingDir())));
     view->show();
