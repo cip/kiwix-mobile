@@ -42,7 +42,11 @@ Cordova::Cordova(QObject *parent) : QObject(parent) {
     wwwDir.cd( "www" );
 
 #if QT_VERSION < 0x050000
+#if defined(Q_OS_ANDROID)
+    m_mainUrl = QUrl::fromUserInput("file:///index.html").toString();
+#else
     m_mainUrl = QUrl::fromUserInput(wwwDir.absoluteFilePath("index.html")).toString();
+#endif
 #else
     m_mainUrl = QUrl::fromUserInput(wwwDir.absoluteFilePath("index_qt5.html")).toString();
 #endif
