@@ -111,12 +111,20 @@ int main(int argc, char *argv[])
 # ifdef MEEGO_EDITION_HARMATTAN
     view->setSource(QUrl(QString("%1/qml/main_harmattan.qml").arg(Cordova::instance()->workingDir())));
     view->showFullScreen();
-# else
+# else    
 
 #  if defined(Q_OS_SYMBIAN) || defined(QT_SIMULATOR)
     view->setSource(QUrl("qml/main.qml"));
     view->showFullScreen();
 #  elif defined(Q_OS_ANDROID)
+    //Workaround for issue that import path incorrect
+    // (e.g. /tmp/necessitas/unstable/Android/Qt/480/build-armeabi/install/imports)
+    //  However,very odd that it has worked without workaround before,
+    // and then it was not working in none of the tested configurations. (e.g. emulator, device
+    // alpha 3 and 4, local deployment and ministro)
+    view->engine()->addImportPath("/data/data/org.kde.necessitas.ministro/files/qt/imports");
+    qDebug() << "view->engine()->importPathList()():"<<view->engine()->importPathList();
+    qDebug() << "view->engine()->pluginPathList():"<<view->engine()->pluginPathList();
     //package qml into resources on android, as else not deployed to device.
     view->setSource(QUrl("qrc:/qml/main.qml"));
     view->showFullScreen();
