@@ -28,19 +28,23 @@ window.chrome = function() {
 	 * @param string html
 	 * @param string url - base URL
 	 */
-	function renderHtml(html, url) {              
+        function renderHtml(html, url) {
+                console.log("in renderHtml for url:"+url);
 		$('base').attr('href', url);
+                console.log("in renderHtml. after first jquery statement.");
 
 		// Horrible hack to grab the lang & dir attributes from
 		// the target page's <html> without parsing the rest
-		var stub = html.match(/<html ([^>]+)>/i, '$1')[1],
+                /*FIXME. currently removed, as not working on android device var stub = html.match(/<html ([^>]+)>/i, '$1')[1],
 			$stubdiv = $('<div ' + stub + '></div>'),
 			lang = $stubdiv.attr('lang'),
-			dir = $stubdiv.attr('dir');
+                        dir = $stubdiv.attr('dir');*/
                 //Fixme
                 dir ="ltr";
+                lang = "de";
+        console.log("renderHtml: dir "+dir+ " lang:"+lang);
 		var trimmed = html.replace(/<body[^>]+>(.*)<\/body/i, '$1');
-                console.log("renderHtml: trimmed: "+trimmed)
+                console.log("renderHtml: trimmed ")
                 var selectors = ['#content>*', '#copyright'],
 			$target = $('#main'),
 			$div = $(trimmed);
