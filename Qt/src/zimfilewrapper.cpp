@@ -174,7 +174,6 @@ QString ZimFileWrapper::getArticleTitleByUrl(QString articleUrl) {
 
 //Note: expects encoded URL (as used in articles). Therefore don't use
 // this for decoded URL (as in zim file index)
-//TODO: getArticleTextByUrl and getimage pretty redundant now.
 QByteArray ZimFileWrapper::getDataByUrl(QString articleUrl)
 {
     QMutexLocker locker(&mutex);
@@ -200,7 +199,7 @@ QByteArray ZimFileWrapper::getDataByUrl(QString articleUrl)
         {
             blob = it->getData();
         }
-        qDebug() << " Article (URL: "<< articleUrl << ", Size: "<<blob.size()<<") loaded from zim file";
+        qDebug() << Q_FUNC_INFO << " Article (URL: "<< articleUrl << ", Size: "<<blob.size()<<") loaded from zim file";
         //TODO: this copies data, which should be avoided
         data = QByteArray(blob.data(), blob.size());
     }
@@ -211,142 +210,6 @@ QByteArray ZimFileWrapper::getDataByUrl(QString articleUrl)
 
     return data;
 }
-
-
-//Note: expects encoded URL (as used in articles). Therefore don't use
-// this for decoded URL (as in zim file index)
-QString ZimFileWrapper::getArticleTextByUrl(QString articleUrl)
-{
-
-    QMutexLocker locker(&mutex);
-    QString articleText = QLatin1String("ERROR");
-    zim::Blob blob;
-    try
-    {
-        zim::File::const_iterator it = getArticleByUrl(articleUrl);
-        //TODO: Actually not really clean, because if URL not found just closest match displayed.
-        if (it == zimFile->end())
-            throw std::runtime_error("article not found");
-        if (it->isRedirect())
-        {
-            //Redirect stores decoded URLs. (as in index)
-            std::string articleUrlDecodedStdStr = it->getRedirectArticle().getUrl();
-            qDebug() << "Is redirect to url " << fromUTF8EncodedStdString(articleUrlDecodedStdStr);
-            zim::File::const_iterator it1 = zimFile->find('A',
-                                                          articleUrlDecodedStdStr);
-            blob = it1->getData();
-        }
-        else
-        {
-            blob = it->getData();
-        }
-        qDebug() << " Article (URL: "<< articleUrl << ", Size: "<<blob.size()<<") loaded from zim file";
-        articleText = QString::fromUtf8(blob.data(), blob.size());
-    }
-    catch (const std::exception& e)
-    {
-        return QString::fromStdString(e.what());
-    }
-
-    return articleText;
-}
-
-//Note: expects encoded URL (as used in articles). Therefore don't use
-// this for decoded URL (as in zim file index)
-QPixmap ZimFileWrapper::getImageByUrl(QString imageUrl, QSize newSize)
-{
-    QMutexLocker locker(&mutex);
-    QTime timer;
-    QTime subTimer;
-
-    QPixmap image;
-    zim::Blob blob;
-    timer.start();
-    try
-    {
-        //For images don't load closest match if url not found.
-        subTimer.start();
-        zim::File::const_iterator it = getArticleByUrl(imageUrl,QLatin1Char('I'),false);
-        if (it == zimFile->end())
-            throw std::runtime_error("image not found");
-        if (it->isRedirect())
-        {
-            //Redirect stores decoded URLs. (as in index)
-            // TODO: really necessary for images?
-            std::string imageUrlDecodedStdStr = it->getRedirectArticle().getUrl();
-            qDebug() << "Is redirect to url " << fromUTF8EncodedStdString(imageUrlDecodedStdStr);
-            zim::File::const_iterator it1 = zimFile->find('I',
-                                                          imageUrlDecodedStdStr);
-            blob = it1->getData();
-        }
-        else
-        {
-            blob = it->getData();
-        }
-    }
-    catch (const std::exception& e)
-    {
-        qDebug() << "Error in load image. Return null pixmap. ";
-        return image;
-    }
-    qDebug() << " Image (URL: "<< imageUrl << ", Size: "<<blob.size()<<") loaded from zim file";
-    qDebug() << "Loading image data" << imageUrl << " from zim file took" << subTimer.restart() << " milliseconds";
-    QBuffer *imageBuffer = new QBuffer();
-    imageBuffer->setData(blob.data(),blob.size());
-    QImageReader *imageReader = new QImageReader(imageBuffer);
-    qDebug() << "Original size of image: "<<imageReader->size();
-    qDebug() << "Image format: "<<imageReader->format();
-    qDebug() << " supports scaling: " << imageReader->supportsOption(QImageIOHandler::ScaledSize);
-    if (newSize.isValid()) {
-        //Resize to save memory.
-        if ((newSize.height()==0)||(newSize.width()==0)) {
-            image = QPixmap(1,1);
-            image.fill();
-            //Note that this branch currently is never triggered,
-            // because ArticleViewer::getMaximumDisplaySizeInCurrentArticleViewer
-            //  returns invalid size if height or width is 0. (This is because it cannot
-            // distinguish between 0 size definition and missing size tag)
-            qDebug() << "Size defined in HTML was 0. ("<<newSize << ". Return 1x1 pixel size instead to avoid repeated reload attempts";
-        } else {
-            if (imageReader->supportsOption(QImageIOHandler::ScaledSize)) {
-                //For formats which support scaled reading (e.g. jpg), use it (as significantly faster than separate reading and scaling)
-                qDebug() << " ScaledSize supported. Read with scaling";
-                imageReader->setScaledSize(newSize);
-                image = QPixmap::fromImageReader(imageReader);
-            }
-            else {
-                // If format does not support scaling (e.g. png) read and scale separately.
-                // benefit is that faster (lower quality) scaling can be used, while setScaledSize
-                // would use high quality (=slower) scaling.
-                // Note: If in future loading is implemented in separate thread,  would probably
-                // make sense to use imagereader (high quality) only.
-                qDebug() << " ScaledSize not supported. Read, and scale afterwards.";
-                QTime subSubTimer;
-                subSubTimer.start();
-                image = QPixmap::fromImageReader(imageReader);
-                qDebug() << "\tQPixmap::fromImageReader (without scaling) took: " << subSubTimer.restart();
-                image=image.scaled(newSize,Qt::IgnoreAspectRatio,Qt::FastTransformation);
-                qDebug() << "\tscaling took: " << subSubTimer.restart();
-            }
-            qDebug() << "Image resized to size defined in HTML\nsize of scaled image: "<<image.size();
-        }
-    } else {
-        image = QPixmap::fromImageReader(imageReader);
-        qWarning() << "image size not found. Don't resize image";
-    }
-    if ((image.isNull()))   {
-
-        qWarning() << "loadFromData failed for image. Return 1x1 pixel image instead. QImageReader Error Message: "<< imageBuffer->errorString();
-        image = QPixmap(1,1);
-        image.fill();
-    }
-    delete imageReader;
-    delete imageBuffer;
-    qDebug() << " Creating Pixmap (including resize) from image data took" << subTimer.restart() << " milliseconds";
-    qDebug() << "Loading image " << imageUrl <<" took" << timer.elapsed() << " milliseconds";
-    return image;
-}
-
 
 
 QString ZimFileWrapper::getArticleTextByTitle(QString articleTitle)
