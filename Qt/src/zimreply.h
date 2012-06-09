@@ -28,16 +28,18 @@ public:
         // which is doubtful)
         AsynchronousZimReader *zimReader = new AsynchronousZimReader(this,ZimReply::zimFileWrapper);
 
-        connect(zimReader, SIGNAL(readDone(QByteArray)),
-                SLOT(readFromZimFileDone(QByteArray)));
+        connect(zimReader, SIGNAL(readDone(QByteArray, QString)),
+                SLOT(readFromZimFileDone(QByteArray, QString)));
         zimReader->readAsync(request.url());
     }
 
     qint64 readData(char* data, qint64 maxSize)
     {
+        qDebug() << Q_FUNC_INFO << " for url. " << this->url();
         const qint64 readSize = qMin(maxSize, (qint64)(buffer.size() - position));
         memcpy(data, buffer.constData() + position, readSize);
         position += readSize;
+        qDebug() << Q_FUNC_INFO << readSize << " bytes read.";
         return readSize;
     }
 
@@ -74,10 +76,10 @@ public:
     }
 
 public slots:
-    void readFromZimFileDone(const QByteArray& data)
+    void readFromZimFileDone(const QByteArray& data, const QString& mimeType)
     {
-        qDebug() << Q_FUNC_INFO << " url: " << this->url();
-        setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("text/html"));
+        qDebug() << Q_FUNC_INFO << " url: " << this->url() << ", mimeType: " <<mimeType;
+        setHeader(QNetworkRequest::ContentTypeHeader, mimeType);
         position = 0;
         buffer = data;
         emit readyRead();

@@ -174,11 +174,13 @@ QString ZimFileWrapper::getArticleTitleByUrl(QString articleUrl) {
 
 //Note: expects encoded URL (as used in articles). Therefore don't use
 // this for decoded URL (as in zim file index)
-QByteArray ZimFileWrapper::getDataByUrl(QString articleUrl)
+QPair<QByteArray, QString> ZimFileWrapper::getDataByUrl(QString articleUrl)
 {
     QMutexLocker locker(&mutex);
     QByteArray data;
+    QString mimeType;
     zim::Blob blob;
+
     try
     {
         //FIXME: for now don't return closest match
@@ -194,21 +196,24 @@ QByteArray ZimFileWrapper::getDataByUrl(QString articleUrl)
             zim::File::const_iterator it1 = zimFile->find('A',
                                                           articleUrlDecodedStdStr);
             blob = it1->getData();
+            mimeType = QString::fromStdString(it1->getMimeType());
+
         }
         else
         {
             blob = it->getData();
+            mimeType = QString::fromStdString(it->getMimeType());
         }
-        qDebug() << Q_FUNC_INFO << " Article (URL: "<< articleUrl << ", Size: "<<blob.size()<<") loaded from zim file";
+        qDebug() << Q_FUNC_INFO << " Article (URL: "<< articleUrl << ", Size: "<<blob.size()<<", MimeType: "<<mimeType<<") loaded from zim file";
         //TODO: this copies data, which should be avoided
         data = QByteArray(blob.data(), blob.size());
     }
     catch (const std::exception& e)
     {
-        return QString::fromStdString(e.what()).toUtf8();
+        return qMakePair(QString::fromStdString(e.what()).toUtf8(), QString(QLatin1String("text/plain")));
     }
 
-    return data;
+    return qMakePair(data,mimeType);
 }
 
 
