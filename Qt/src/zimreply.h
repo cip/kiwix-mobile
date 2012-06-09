@@ -79,7 +79,14 @@ public slots:
     void readFromZimFileDone(const QByteArray& data, const QString& mimeType)
     {
         qDebug() << Q_FUNC_INFO << " url: " << this->url() << ", mimeType: " <<mimeType;
-        setHeader(QNetworkRequest::ContentTypeHeader, mimeType);
+        if (mimeType.startsWith(QLatin1String("image/"))) {
+            //TODO: If mimeType is correct (image/png) and (image/jpeg) neither pngs nor jpgs are displayed.
+            // If mimeType is for all images image/jpeg or image at least pngs are displayed.
+            qDebug() << "Workaround for android: mimeType "<< mimeType << " is imageType -> set MimeType to image";
+            setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("image"));
+        } else {
+            setHeader(QNetworkRequest::ContentTypeHeader, mimeType);
+        }
         position = 0;
         buffer = data;
         emit readyRead();
