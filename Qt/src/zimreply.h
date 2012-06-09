@@ -87,6 +87,7 @@ public slots:
         } else {
             setHeader(QNetworkRequest::ContentTypeHeader, mimeType);
         }
+        setHeader(QNetworkRequest::ContentLengthHeader,data.length());
         position = 0;
         buffer = data;
         emit readyRead();
