@@ -104,10 +104,16 @@ int main(int argc, char *argv[])
     //FIXME:
     view->engine()->setNetworkAccessManagerFactory(new MyNetworkAccessManagerFactory);
     ZimFileWrapper zimFileWrapper;
+    bool r;
+#if defined(Q_OS_ANDROID)
+    r = zimFileWrapper.openZimFile("/mnt/sdcard/test.zim");
+#else
+    r = zimFileWrapper.openZimFile("../zim/test.zim");
+#endif
+    if (r) {
+        qDebug() << Q_FUNC_INFO << "ZIM file " << zimFileWrapper.getFilename() << " opened.";
+    }
 
-    //zimFileWrapper.openZimFile("../zim/HTML5VideoDemo.zim");
-    //zimFileWrapper.openZimFile("C:\\Users\\Christian\\Downloads\\wikipedia_en_wp1_0.8_45000+_12_2010.zim");
-    zimFileWrapper.openZimFile("/sdcard/Bryan Adams.zim");
 # ifdef MEEGO_EDITION_HARMATTAN
     view->setSource(QUrl(QString("%1/qml/main_harmattan.qml").arg(Cordova::instance()->workingDir())));
     view->showFullScreen();

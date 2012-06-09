@@ -255,7 +255,8 @@ zim::File::const_iterator ZimFileWrapper::getArticleByUrl(QString articleUrl,QCh
         //FIXME
         //articleUrl = QLatin1String("/A/HTML5 Demo: Video.html");
         //articleUrl = QLatin1String("/A/Wikipedia.html");
-        articleUrl = QLatin1String("/A/Bryan Adams");
+        //articleUrl = QLatin1String("/A/Bryan Adams");
+        articleUrl = QLatin1String("/A/Kenya.html");
 
     qDebug() << "Loading article from url: " << articleUrl ;
 
