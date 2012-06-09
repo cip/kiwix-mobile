@@ -256,12 +256,17 @@ QString ZimFileWrapper::getArticleTextByTitle(QString articleTitle)
 zim::File::const_iterator ZimFileWrapper::getArticleByUrl(QString articleUrl,QChar nameSpace, bool closestMatchIfNotFound) {
     QString strippedArticleUrl;
 
-    if (articleUrl == "" || articleUrl == "/")
-        //FIXME
-        //articleUrl = QLatin1String("/A/HTML5 Demo: Video.html");
-        //articleUrl = QLatin1String("/A/Wikipedia.html");
-        //articleUrl = QLatin1String("/A/Bryan Adams");
-        articleUrl = QLatin1String("/A/Kenya.html");
+    if (articleUrl == "" || articleUrl == "/") {
+        int mainPageIdx = zimFile->getFileheader().getMainPage();
+        qDebug() << " url is "<< articleUrl << " -> Open main page. MainPageIdx "<< mainPageIdx;
+        if (mainPageIdx != 0xffffffffff) {
+            articleUrl = QString::fromStdString(zimFile->getArticle(mainPageIdx).getLongUrl());
+            qDebug() << " main page url is: "<<articleUrl;
+        } else {
+            qDebug() << " No main page defined in zim file ";
+        }
+
+    }
 
     qDebug() << "Loading article from url: " << articleUrl ;
 
